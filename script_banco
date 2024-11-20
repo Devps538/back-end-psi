@@ -1,0 +1,155 @@
+--Tabela consultas CREATE
+
+-- Table: public.consultas
+
+-- DROP TABLE IF EXISTS public.consultas;
+
+CREATE TABLE IF NOT EXISTS public.consultas
+(
+    id integer NOT NULL DEFAULT nextval('consultas_id_seq'::regclass),
+    data timestamp with time zone NOT NULL,
+    observacoes text COLLATE pg_catalog."default",
+    "pacienteId" integer,
+    "psicologoId" integer,
+    CONSTRAINT consultas_pkey PRIMARY KEY (id),
+    CONSTRAINT "consultas_pacienteId_fkey" FOREIGN KEY ("pacienteId")
+        REFERENCES public.usuarios (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT "consultas_psicologoId_fkey" FOREIGN KEY ("psicologoId")
+        REFERENCES public.usuarios (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.consultas
+    OWNER to postgres;
+
+--SELECT
+
+
+SELECT id, data, observacoes, "pacienteId", "psicologoId"
+	FROM public.consultas;
+
+
+--INSERT
+
+
+INSERT INTO public.consultas(
+	id, data, observacoes, "pacienteId", "psicologoId")
+	VALUES (?, ?, ?, ?, ?);
+
+--UPDATE
+
+
+UPDATE public.consultas
+	SET id=?, data=?, observacoes=?, "pacienteId"=?, "psicologoId"=?
+	WHERE <condition>;
+
+--DELETE
+
+DELETE FROM public.consultas
+	WHERE <condition>;
+
+
+-- Table: public.diarios
+
+-- DROP TABLE IF EXISTS public.diarios;
+
+CREATE TABLE IF NOT EXISTS public.diarios
+(
+    id integer NOT NULL DEFAULT nextval('diarios_id_seq'::regclass),
+    conteudo text COLLATE pg_catalog."default" NOT NULL,
+    titulo character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "dataCriacao" timestamp with time zone,
+    "usuarioId" integer,
+    CONSTRAINT diarios_pkey PRIMARY KEY (id),
+    CONSTRAINT "diarios_usuarioId_fkey" FOREIGN KEY ("usuarioId")
+        REFERENCES public.usuarios (id) MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.diarios
+    OWNER to postgres;
+
+
+--SELECT
+
+SELECT id, conteudo, titulo, "dataCriacao", "usuarioId"
+	FROM public.diarios;
+
+
+--INSERT
+
+INSERT INTO public.diarios(
+	id, conteudo, titulo, "dataCriacao", "usuarioId")
+	VALUES (?, ?, ?, ?, ?);
+
+--UPDATE
+
+UPDATE public.diarios
+	SET id=?, conteudo=?, titulo=?, "dataCriacao"=?, "usuarioId"=?
+	WHERE <condition>;
+
+--DELETE
+DELETE FROM public.diarios
+	WHERE <condition>;
+
+-- Table: public.usuarios
+
+-- DROP TABLE IF EXISTS public.usuarios;
+
+CREATE TABLE IF NOT EXISTS public.usuarios
+(
+    id integer NOT NULL DEFAULT nextval('usuarios_id_seq'::regclass),
+    nome character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    cpf character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "dataNascimento" date NOT NULL,
+    sexo enum_usuarios_sexo NOT NULL,
+    senha character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "tipoUsuario" "enum_usuarios_tipoUsuario" NOT NULL,
+    "createdAt" timestamp with time zone NOT NULL,
+    "updatedAt" timestamp with time zone NOT NULL,
+    CONSTRAINT usuarios_pkey PRIMARY KEY (id),
+    
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.usuarios
+    OWNER to postgres;
+
+
+-- Table: public.pacientes
+
+-- DROP TABLE IF EXISTS public.pacientes;
+
+CREATE TABLE IF NOT EXISTS public.pacientes
+(
+    id integer NOT NULL DEFAULT nextval('pacientes_id_seq'::regclass),
+    nome character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    cpf character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    "dataNascimento" date NOT NULL,
+    sexo enum_pacientes_sexo NOT NULL,
+    telefone character varying(255) COLLATE pg_catalog."default",
+    email character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT pacientes_pkey PRIMARY KEY (id),
+    CONSTRAINT pacientes_cpf_key UNIQUE (cpf),
+    CONSTRAINT pacientes_cpf_key1 UNIQUE (cpf),
+    CONSTRAINT pacientes_email_key UNIQUE (email),
+    CONSTRAINT pacientes_email_key1 UNIQUE (email)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.pacientes
+    OWNER to postgres;
+
+
+
